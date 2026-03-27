@@ -16,13 +16,12 @@ export default function NewLinkForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col gap-4 bg-white dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700 shadow-sm p-6 max-w-lg w-full"
+      className="flex flex-col gap-5 bg-[var(--card)] rounded-[8px] border border-[var(--border)] p-6 w-full max-w-lg"
     >
+      <h2 className="text-xl font-semibold text-[var(--text)]">새 링크 추가</h2>
+
       <div className="flex flex-col gap-1.5">
-        <label
-          htmlFor="url"
-          className="text-sm font-medium text-gray-700 dark:text-zinc-300"
-        >
+        <label htmlFor="url" className="text-sm font-medium text-[var(--text)]">
           링크
         </label>
         <input
@@ -32,15 +31,12 @@ export default function NewLinkForm() {
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           required
-          className="px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-zinc-600 bg-white dark:bg-zinc-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="input-base"
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label
-          htmlFor="folder"
-          className="text-sm font-medium text-gray-700 dark:text-zinc-300"
-        >
+        <label htmlFor="folder" className="text-sm font-medium text-[var(--text)]">
           폴더
         </label>
         <select
@@ -48,7 +44,7 @@ export default function NewLinkForm() {
           value={folder}
           onChange={(e) => setFolder(e.target.value)}
           required
-          className="px-3 py-2 text-sm rounded-lg border border-gray-300 dark:border-zinc-600 bg-white dark:bg-zinc-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="input-base"
         >
           <option value="" disabled>
             폴더를 선택하세요
@@ -63,7 +59,7 @@ export default function NewLinkForm() {
 
       <button
         type="submit"
-        className="mt-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+        className="btn-accent mt-1 px-4 py-2 text-sm font-medium rounded-[6px]"
       >
         저장
       </button>
