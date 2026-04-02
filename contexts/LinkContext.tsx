@@ -16,6 +16,7 @@ type LinkContextType = {
   links: Link[];
   addLink: (link: Omit<Link, "id">) => void;
   deleteLink: (id: number) => void;
+  updateLink: (id: number, fields: Pick<Link, "title" | "description" | "folder">) => void;
 };
 
 const LinkContext = createContext<LinkContextType | null>(null);
@@ -32,8 +33,12 @@ export function LinkProvider({ children }: { children: ReactNode }) {
     setLinks((prev) => prev.filter((l) => l.id !== id));
   }
 
+  function updateLink(id: number, fields: Pick<Link, "title" | "description" | "folder">) {
+    setLinks((prev) => prev.map((l) => (l.id === id ? { ...l, ...fields } : l)));
+  }
+
   return (
-    <LinkContext.Provider value={{ links, addLink, deleteLink }}>
+    <LinkContext.Provider value={{ links, addLink, deleteLink, updateLink }}>
       {children}
     </LinkContext.Provider>
   );
