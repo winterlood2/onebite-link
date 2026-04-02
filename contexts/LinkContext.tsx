@@ -15,6 +15,7 @@ export type Link = {
 type LinkContextType = {
   links: Link[];
   addLink: (link: Omit<Link, "id">) => void;
+  deleteLink: (id: number) => void;
 };
 
 const LinkContext = createContext<LinkContextType | null>(null);
@@ -27,8 +28,12 @@ export function LinkProvider({ children }: { children: ReactNode }) {
     setLinks((prev) => [newLink, ...prev]);
   }
 
+  function deleteLink(id: number) {
+    setLinks((prev) => prev.filter((l) => l.id !== id));
+  }
+
   return (
-    <LinkContext.Provider value={{ links, addLink }}>
+    <LinkContext.Provider value={{ links, addLink, deleteLink }}>
       {children}
     </LinkContext.Provider>
   );
