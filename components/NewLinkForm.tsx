@@ -1,16 +1,39 @@
 "use client";
 
 import { useState } from "react";
-import { folders } from "@/lib/data";
+import { useRouter } from "next/navigation";
+import { useFolders } from "@/contexts/FolderContext";
+import { useLinks } from "@/contexts/LinkContext";
 
 export default function NewLinkForm() {
   const [url, setUrl] = useState("");
   const [folder, setFolder] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const { folders } = useFolders();
+  const { addLink } = useLinks();
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: save link
-    console.log({ url, folder });
+    setLoading(true);
+
+    try {
+      const res = await fetch(`/api/og?url=${encodeURIComponent(url)}`);
+      const og = await res.json();
+
+      addLink({
+        title: og.title || url,
+        url,
+        description: og.description || "",
+        folder,
+        thumbnail: og.image || "",
+      });
+
+      router.push("/");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -59,9 +82,10 @@ export default function NewLinkForm() {
 
       <button
         type="submit"
-        className="btn-accent mt-1 px-4 py-2 text-sm font-medium rounded-[6px]"
+        disabled={loading}
+        className="btn-accent mt-1 px-4 py-2 text-sm font-medium rounded-[6px] disabled:opacity-60"
       >
-        저장
+        {loading ? "저장 중..." : "저장"}
       </button>
     </form>
   );

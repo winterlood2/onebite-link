@@ -1,11 +1,17 @@
+"use client";
+
 import LinkCard from "@/components/LinkCard";
-import { links, folders } from "@/lib/data";
+import { useLinks } from "@/contexts/LinkContext";
+import { useFolders } from "@/contexts/FolderContext";
 
 type LinkGridProps = {
   folderId?: string;
 };
 
 export default function LinkGrid({ folderId }: LinkGridProps) {
+  const { links } = useLinks();
+  const { folders } = useFolders();
+
   const filtered = folderId
     ? (() => {
         const folder = folders.find((f) => f.id === Number(folderId));
