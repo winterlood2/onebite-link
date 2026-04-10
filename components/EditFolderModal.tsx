@@ -13,10 +13,10 @@ export default function EditFolderModal({ folderId, currentName, onClose }: Prop
   const [name, setName] = useState(currentName);
   const { renameFolder } = useFolders();
 
-  function handleSave() {
+  async function handleSave() {
     const trimmed = name.trim();
     if (!trimmed) return;
-    renameFolder(folderId, trimmed);
+    await renameFolder(folderId, trimmed);
     onClose();
   }
 
