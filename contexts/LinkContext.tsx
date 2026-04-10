@@ -16,7 +16,7 @@ type LinkContextType = {
   links: Link[];
   addLink: (link: Omit<Link, "id">) => Promise<void>;
   deleteLink: (id: number) => void;
-  updateLink: (id: number, fields: Pick<Link, "title" | "description" | "folder_id">) => void;
+  updateLink: (id: number, fields: Pick<Link, "title" | "description" | "folder_id">) => Promise<void>;
 };
 
 const LinkContext = createContext<LinkContextType | null>(null);
@@ -49,7 +49,9 @@ export function LinkProvider({ children }: { children: ReactNode }) {
     setLinks((prev) => prev.filter((l) => l.id !== id));
   }
 
-  function updateLink(id: number, fields: Pick<Link, "title" | "description" | "folder_id">) {
+  async function updateLink(id: number, fields: Pick<Link, "title" | "description" | "folder_id">) {
+    const supabase = createClient();
+    await supabase.from("links").update(fields).eq("id", id);
     setLinks((prev) => prev.map((l) => (l.id === id ? { ...l, ...fields } : l)));
   }
 

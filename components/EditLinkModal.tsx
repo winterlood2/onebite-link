@@ -26,10 +26,10 @@ export default function EditLinkModal({
   const { updateLink } = useLinks();
   const { folders } = useFolders();
 
-  function handleSave() {
+  async function handleSave() {
     const trimmedTitle = title.trim();
     if (!trimmedTitle) return;
-    updateLink(linkId, {
+    await updateLink(linkId, {
       title: trimmedTitle,
       description: description.trim(),
       folder_id: folderId ? Number(folderId) : null,
