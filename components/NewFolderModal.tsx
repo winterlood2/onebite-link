@@ -9,12 +9,14 @@ type Props = {
 
 export default function NewFolderModal({ onClose }: Props) {
   const [name, setName] = useState("");
+  const [saving, setSaving] = useState(false);
   const { addFolder } = useFolders();
 
-  function handleSave() {
+  async function handleSave() {
     const trimmed = name.trim();
-    if (!trimmed) return;
-    addFolder(trimmed);
+    if (!trimmed || saving) return;
+    setSaving(true);
+    await addFolder(trimmed);
     onClose();
   }
 
@@ -50,9 +52,10 @@ export default function NewFolderModal({ onClose }: Props) {
           </button>
           <button
             onClick={handleSave}
-            className="btn-accent px-4 py-1.5 text-sm font-medium rounded-[6px]"
+            disabled={saving}
+            className="btn-accent px-4 py-1.5 text-sm font-medium rounded-[6px] disabled:opacity-50"
           >
-            저장
+            {saving ? "저장 중..." : "저장"}
           </button>
         </div>
       </div>

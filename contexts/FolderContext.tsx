@@ -1,13 +1,13 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
-import { folders as initialFolders } from "@/lib/data";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createClient } from "@/utils/supabase/client";
 
 type Folder = { id: number; name: string };
 
 type FolderContextType = {
   folders: Folder[];
-  addFolder: (name: string) => void;
+  addFolder: (name: string) => Promise<void>;
   deleteFolder: (id: number) => void;
   renameFolder: (id: number, name: string) => void;
 };
@@ -15,14 +15,27 @@ type FolderContextType = {
 const FolderContext = createContext<FolderContextType | null>(null);
 
 export function FolderProvider({ children }: { children: ReactNode }) {
-  const [folders, setFolders] = useState<Folder[]>(initialFolders);
+  const [folders, setFolders] = useState<Folder[]>([]);
 
-  function addFolder(name: string) {
-    const newFolder: Folder = {
-      id: Date.now(),
-      name,
-    };
-    setFolders((prev) => [...prev, newFolder]);
+  useEffect(() => {
+    const supabase = createClient();
+    supabase
+      .from("folders")
+      .select("id, name")
+      .order("created_at", { ascending: true })
+      .then(({ data }) => {
+        if (data) setFolders(data);
+      });
+  }, []);
+
+  async function addFolder(name: string) {
+    const supabase = createClient();
+    const { data } = await supabase
+      .from("folders")
+      .insert({ name })
+      .select("id, name")
+      .single();
+    if (data) setFolders((prev) => [...prev, data]);
   }
 
   function deleteFolder(id: number) {
