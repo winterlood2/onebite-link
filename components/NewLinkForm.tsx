@@ -7,7 +7,7 @@ import { useLinks } from "@/contexts/LinkContext";
 
 export default function NewLinkForm() {
   const [url, setUrl] = useState("");
-  const [folder, setFolder] = useState("");
+  const [folderId, setFolderId] = useState("");
   const [loading, setLoading] = useState(false);
 
   const { folders } = useFolders();
@@ -16,18 +16,19 @@ export default function NewLinkForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
     setLoading(true);
 
     try {
       const res = await fetch(`/api/og?url=${encodeURIComponent(url)}`);
       const og = await res.json();
 
-      addLink({
+      await addLink({
         title: og.title || url,
         url,
         description: og.description || "",
-        folder,
-        thumbnail: og.image || "",
+        thumbnail_url: og.image || null,
+        folder_id: folderId ? Number(folderId) : null,
       });
 
       router.push("/");
@@ -64,8 +65,8 @@ export default function NewLinkForm() {
         </label>
         <select
           id="folder"
-          value={folder}
-          onChange={(e) => setFolder(e.target.value)}
+          value={folderId}
+          onChange={(e) => setFolderId(e.target.value)}
           required
           className="input-base"
         >
@@ -73,7 +74,7 @@ export default function NewLinkForm() {
             폴더를 선택하세요
           </option>
           {folders.map((f) => (
-            <option key={f.id} value={f.name}>
+            <option key={f.id} value={f.id}>
               {f.name}
             </option>
           ))}

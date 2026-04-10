@@ -13,16 +13,19 @@ export default function LinkGrid({ folderId }: LinkGridProps) {
   const { folders } = useFolders();
 
   const filtered = folderId
-    ? (() => {
-        const folder = folders.find((f) => f.id === Number(folderId));
-        return folder ? links.filter((l) => l.folder === folder.name) : [];
-      })()
+    ? links.filter((l) => l.folder_id === Number(folderId))
     : links;
+
+  const folderMap = Object.fromEntries(folders.map((f) => [f.id, f.name]));
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       {filtered.map((link) => (
-        <LinkCard key={link.id} {...link} />
+        <LinkCard
+          key={link.id}
+          {...link}
+          folderName={link.folder_id != null ? folderMap[link.folder_id] : undefined}
+        />
       ))}
     </div>
   );

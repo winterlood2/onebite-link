@@ -8,7 +8,7 @@ type Props = {
   linkId: number;
   currentTitle: string;
   currentDescription: string;
-  currentFolder: string;
+  currentFolderId: number | null;
   onClose: () => void;
 };
 
@@ -16,12 +16,12 @@ export default function EditLinkModal({
   linkId,
   currentTitle,
   currentDescription,
-  currentFolder,
+  currentFolderId,
   onClose,
 }: Props) {
   const [title, setTitle] = useState(currentTitle);
   const [description, setDescription] = useState(currentDescription);
-  const [folder, setFolder] = useState(currentFolder);
+  const [folderId, setFolderId] = useState<string>(currentFolderId != null ? String(currentFolderId) : "");
 
   const { updateLink } = useLinks();
   const { folders } = useFolders();
@@ -29,7 +29,11 @@ export default function EditLinkModal({
   function handleSave() {
     const trimmedTitle = title.trim();
     if (!trimmedTitle) return;
-    updateLink(linkId, { title: trimmedTitle, description: description.trim(), folder });
+    updateLink(linkId, {
+      title: trimmedTitle,
+      description: description.trim(),
+      folder_id: folderId ? Number(folderId) : null,
+    });
     onClose();
   }
 
@@ -47,12 +51,13 @@ export default function EditLinkModal({
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-medium text-[var(--text)]">폴더</label>
           <select
-            value={folder}
-            onChange={(e) => setFolder(e.target.value)}
+            value={folderId}
+            onChange={(e) => setFolderId(e.target.value)}
             className="input-base"
           >
+            <option value="">폴더 없음</option>
             {folders.map((f) => (
-              <option key={f.id} value={f.name}>
+              <option key={f.id} value={f.id}>
                 {f.name}
               </option>
             ))}

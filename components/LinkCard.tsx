@@ -6,34 +6,37 @@ import EditLinkModal from "@/components/EditLinkModal";
 
 type LinkCardProps = {
   id: number;
-  title: string;
+  title: string | null;
   url: string;
-  description: string;
-  folder: string;
-  thumbnail?: string;
+  description: string | null;
+  folder_id: number | null;
+  thumbnail_url: string | null;
+  folderName?: string;
 };
 
-export default function LinkCard({ id, title, url, description, folder, thumbnail }: LinkCardProps) {
+export default function LinkCard({ id, title, url, description, folder_id, thumbnail_url, folderName }: LinkCardProps) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
 
   return (
     <>
       <div className="card-hover group relative flex flex-col bg-[var(--card)] rounded-[8px] border border-[var(--border)] overflow-hidden transition-colors">
-        {thumbnail && (
+        {thumbnail_url && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={thumbnail}
-            alt={title}
+            src={thumbnail_url}
+            alt={title ?? ""}
             className="w-full h-36 object-cover"
           />
         )}
         <div className="flex flex-col gap-3 p-4">
-          <span className="self-start text-[13px] px-2 py-0.5 rounded-[4px] bg-[var(--hover-bg)] text-[var(--text)]">
-            {folder}
-          </span>
+          {folderName && (
+            <span className="self-start text-[13px] px-2 py-0.5 rounded-[4px] bg-[var(--hover-bg)] text-[var(--text)]">
+              {folderName}
+            </span>
+          )}
           <h3 className="text-sm font-semibold text-[var(--text)] line-clamp-1">
-            {title}
+            {title ?? url}
           </h3>
           <p className="text-sm text-[var(--text-sub)] line-clamp-2 leading-relaxed">
             {description}
@@ -99,9 +102,9 @@ export default function LinkCard({ id, title, url, description, folder, thumbnai
       {showEditModal && (
         <EditLinkModal
           linkId={id}
-          currentTitle={title}
-          currentDescription={description}
-          currentFolder={folder}
+          currentTitle={title ?? ""}
+          currentDescription={description ?? ""}
+          currentFolderId={folder_id}
           onClose={() => setShowEditModal(false)}
         />
       )}
@@ -109,7 +112,7 @@ export default function LinkCard({ id, title, url, description, folder, thumbnai
       {showDeleteModal && (
         <DeleteLinkModal
           linkId={id}
-          linkTitle={title}
+          linkTitle={title ?? url}
           onClose={() => setShowDeleteModal(false)}
         />
       )}
