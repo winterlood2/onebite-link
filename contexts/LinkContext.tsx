@@ -15,7 +15,7 @@ export type Link = {
 type LinkContextType = {
   links: Link[];
   addLink: (link: Omit<Link, "id">) => Promise<void>;
-  deleteLink: (id: number) => void;
+  deleteLink: (id: number) => Promise<void>;
   updateLink: (id: number, fields: Pick<Link, "title" | "description" | "folder_id">) => Promise<void>;
 };
 
@@ -45,7 +45,9 @@ export function LinkProvider({ children }: { children: ReactNode }) {
     if (data) setLinks((prev) => [data, ...prev]);
   }
 
-  function deleteLink(id: number) {
+  async function deleteLink(id: number) {
+    const supabase = createClient();
+    await supabase.from("links").delete().eq("id", id);
     setLinks((prev) => prev.filter((l) => l.id !== id));
   }
 
