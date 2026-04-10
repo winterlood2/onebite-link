@@ -11,8 +11,8 @@ type Props = {
 export default function DeleteFolderModal({ folderId, folderName, onClose }: Props) {
   const { deleteFolder } = useFolders();
 
-  function handleConfirm() {
-    deleteFolder(folderId);
+  async function handleConfirm() {
+    await deleteFolder(folderId);
     onClose();
   }
 
