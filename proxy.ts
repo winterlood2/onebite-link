@@ -16,7 +16,10 @@ export async function proxy(request: NextRequest) {
     path.startsWith("/folder/");
 
   const isPublicRoute =
-    path === "/login" || path === "/signup";
+    path === "/login" ||
+    path === "/signup" ||
+    path === "/forgot-password" ||
+    path === "/reset-password";
 
   let response = NextResponse.next({ request });
 

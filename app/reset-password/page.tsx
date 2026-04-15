@@ -1,18 +1,17 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 
-export default function LoginPage() {
+export default function ResetPasswordPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
   const [toast, setToast] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const isFormFilled = email.trim() !== "" && password !== "";
+  const isFormFilled = password !== "" && passwordConfirm !== "";
 
   const showToast = (message: string) => {
     setToast(message);
@@ -23,18 +22,21 @@ export default function LoginPage() {
     e.preventDefault();
     if (!isFormFilled) return;
 
+    if (password !== passwordConfirm) {
+      showToast("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
     setLoading(true);
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.updateUser({ password });
     setLoading(false);
 
     if (error) {
-      if (error.message.includes("Invalid login credentials") || error.message.includes("invalid_credentials")) {
-        showToast("이메일 또는 비밀번호가 올바르지 않습니다.");
-      } else if (error.message.includes("Email not confirmed")) {
-        showToast("이메일 인증이 완료되지 않았습니다.");
+      if (error.message.includes("weak") || error.message.includes("password")) {
+        showToast("비밀번호는 6자 이상이어야 합니다.");
       } else {
-        showToast("로그인에 실패했습니다. 다시 시도해 주세요.");
+        showToast("비밀번호 재설정에 실패했습니다. 다시 시도해 주세요.");
       }
       return;
     }
@@ -51,23 +53,24 @@ export default function LoginPage() {
       )}
 
       <div className="w-full max-w-sm px-6">
-        <h1 className="text-2xl font-bold text-[var(--text)] text-center mb-8">
+        <h1 className="text-2xl font-bold text-[var(--text)] text-center mb-2">
           한입 링크
         </h1>
+        <p className="text-sm text-[var(--text-sub)] text-center mb-8">새 비밀번호 설정</p>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <input
-            type="email"
-            placeholder="이메일"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="password"
+            placeholder="새 비밀번호"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="input-base"
           />
           <input
             type="password"
-            placeholder="비밀번호"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            placeholder="새 비밀번호 확인"
+            value={passwordConfirm}
+            onChange={(e) => setPasswordConfirm(e.target.value)}
             className="input-base"
           />
           <button
@@ -75,21 +78,9 @@ export default function LoginPage() {
             disabled={!isFormFilled || loading}
             className="btn-accent w-full py-2 rounded-md text-sm font-medium mt-1 disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            {loading ? "처리 중..." : "로그인"}
+            {loading ? "처리 중..." : "비밀번호 재설정"}
           </button>
         </form>
-
-        <p className="text-center text-sm text-[var(--text-sub)] mt-4">
-          <Link href="/forgot-password" className="text-[var(--accent)] hover:underline">
-            비밀번호 찾기
-          </Link>
-        </p>
-        <p className="text-center text-sm text-[var(--text-sub)] mt-2">
-          계정이 없으신가요?{" "}
-          <Link href="/signup" className="text-[var(--accent)] hover:underline">
-            회원가입
-          </Link>
-        </p>
       </div>
     </div>
   );
