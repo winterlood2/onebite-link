@@ -1,19 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useFolders } from "@/contexts/FolderContext";
 import DeleteFolderModal from "./DeleteFolderModal";
 import EditFolderModal from "./EditFolderModal";
+import { createClient } from "@/utils/supabase/client";
 
 type FolderTarget = { id: number; name: string };
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { folders } = useFolders();
   const [deleteTarget, setDeleteTarget] = useState<FolderTarget | null>(null);
   const [editTarget, setEditTarget] = useState<FolderTarget | null>(null);
+
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push("/login");
+  };
 
   return (
     <>
@@ -92,6 +100,28 @@ export default function Sidebar() {
               </div>
             );
           })}
+        </div>
+        <div className="mt-auto pt-3 border-t border-[var(--border)]">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-2 px-3 py-2 rounded-[6px] text-sm text-[var(--text-sub)] nav-item transition-colors hover:text-red-500"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <polyline points="16 17 21 12 16 7" />
+              <line x1="21" y1="12" x2="9" y2="12" />
+            </svg>
+            로그아웃
+          </button>
         </div>
       </aside>
       {editTarget && (
