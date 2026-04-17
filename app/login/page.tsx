@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
@@ -13,6 +14,16 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   const isFormFilled = email.trim() !== "" && password !== "";
+
+  const handleKakaoLogin = async () => {
+    const supabase = createClient();
+    await supabase.auth.signInWithOAuth({
+      provider: "kakao",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+  };
 
   const showToast = (message: string) => {
     setToast(message);
@@ -76,6 +87,19 @@ export default function LoginPage() {
             className="btn-accent w-full py-2 rounded-md text-sm font-medium mt-1 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             {loading ? "처리 중..." : "로그인"}
+          </button>
+          <button
+            type="button"
+            onClick={handleKakaoLogin}
+            className="w-full mt-1"
+          >
+            <Image
+              src="/kakao_login_large_wide.png"
+              alt="카카오 로그인"
+              width={300}
+              height={45}
+              className="w-full h-auto"
+            />
           </button>
         </form>
 
