@@ -23,17 +23,32 @@ const LinkContext = createContext<LinkContextType | null>(null);
 
 export function LinkProvider({ children }: { children: ReactNode }) {
   const [links, setLinks] = useState<Link[]>([]);
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      setUserId(data.user?.id ?? null);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
+      setUserId(session?.user?.id ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    setLinks([]);
+    if (!userId) return;
     const supabase = createClient();
     supabase
       .from("links")
       .select("id, url, title, description, thumbnail_url, folder_id")
+      .eq("user_id", userId)
       .order("created_at", { ascending: false })
       .then(({ data }) => {
         if (data) setLinks(data);
       });
-  }, []);
+  }, [userId]);
 
   async function addLink(link: Omit<Link, "id">) {
     const supabase = createClient();
