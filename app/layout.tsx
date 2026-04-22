@@ -10,8 +10,19 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "한입 링크",
+  title: {
+    template: "%s | 한입 링크",
+    default: "한입 링크",
+  },
   description: "나만의 링크 모음",
+  openGraph: {
+    title: "한입 링크",
+    description: "나만의 링크 모음",
+    siteName: "한입 링크",
+    images: [{ url: "/thumbnail.png", width: 1200, height: 630 }],
+    type: "website",
+    locale: "ko_KR",
+  },
 };
 
 export default function RootLayout({
