@@ -20,7 +20,7 @@ export default function LinkCard({ id, title, url, description, folder_id, thumb
 
   return (
     <>
-      <div className="card-hover group relative flex flex-col bg-[var(--card)] rounded-[8px] border border-[var(--border)] overflow-hidden transition-colors">
+      <div className="card-hover group relative flex flex-col bg-[var(--card)] rounded-[8px] border border-[var(--border)] overflow-hidden transition-colors max-w-[300px]">
         {thumbnail_url && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -29,7 +29,7 @@ export default function LinkCard({ id, title, url, description, folder_id, thumb
             className="w-full h-36 object-cover"
           />
         )}
-        <div className="flex flex-col gap-3 p-4">
+        <div className="flex flex-col gap-3 p-4 overflow-hidden">
           {folderName && (
             <span className="self-start text-[13px] px-2 py-0.5 rounded-[4px] bg-[var(--hover-bg)] text-[var(--text)]">
               {folderName}
