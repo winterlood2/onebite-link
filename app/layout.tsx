@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { FolderProvider } from "@/contexts/FolderContext";
 import { LinkProvider } from "@/contexts/LinkContext";
@@ -32,6 +33,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className={`${geistSans.variable} h-full antialiased`}>
+      <head>
+        <Script id="ms-clarity" strategy="afterInteractive">
+          {`(function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+          })(window, document, "clarity", "script", "wxjnblta8j");`}
+        </Script>
+      </head>
       <body className="min-h-full flex flex-col">
         <FolderProvider>
           <LinkProvider>{children}</LinkProvider>
