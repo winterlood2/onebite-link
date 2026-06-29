@@ -33,7 +33,7 @@ export default function NewLinkForm() {
         </div>
         <button
           type="submit"
-          className="btn-primary w-full text-sm font-medium py-2.5 rounded-md cursor-pointer"
+          className="btn-primary text-sm font-medium py-2.5 rounded-md cursor-pointer"
         >
           저장
         </button>

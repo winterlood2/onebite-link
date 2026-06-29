@@ -6,11 +6,8 @@ export default function Header() {
       <Link href="/" className="text-base font-semibold text-[var(--text)]">
         한입 링크
       </Link>
-      <Link
-        href="/new"
-        className="btn-primary flex items-center gap-1 text-sm font-medium px-4 py-2 rounded-md"
-      >
-        + Add Link
+      <Link href="/new" className="btn-primary text-sm font-medium px-4 py-2 rounded-md">
+        새 링크
       </Link>
     </header>
   );
