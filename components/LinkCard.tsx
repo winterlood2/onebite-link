@@ -24,7 +24,7 @@ export default function LinkCard({ link }: { link: Link }) {
       rel="noopener noreferrer"
       className="card-link flex flex-col"
     >
-      <div className="h-24 bg-[var(--hover-bg)] flex items-center justify-center">
+      <div className="h-24 bg-[var(--bg)] flex items-center justify-center">
         <img
           src={`https://www.google.com/s2/favicons?domain=${domain}&sz=64`}
           alt={link.title}

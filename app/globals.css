@@ -23,6 +23,7 @@ body {
 .btn-primary {
   background: var(--accent);
   color: white;
+  font-size: 14px;
   transition: background 0.15s ease;
 }
 .btn-primary:hover {
@@ -44,7 +45,7 @@ body {
   transition: background 0.15s ease;
 }
 .card-link:hover {
-  background: var(--hover-bg);
+  background: var(--bg);
 }
 
 .input-field {
