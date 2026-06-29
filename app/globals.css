@@ -51,25 +51,16 @@ body {
   opacity: 0.85;
 }
 
-/* Folder item — trash icon swap with count on hover */
-.folder-count {
-  transition: opacity 0.15s ease;
-}
-.folder-item:hover .folder-count {
-  opacity: 0;
-}
-
-.folder-delete-btn {
-  opacity: 0;
-  pointer-events: none;
+.folder-action-btn {
   color: var(--text-sub);
-  transition: opacity 0.15s ease, color 0.15s ease;
+  padding: 2px;
+  border-radius: 4px;
+  transition: color 0.15s ease;
 }
-.folder-item:hover .folder-delete-btn {
-  opacity: 1;
-  pointer-events: auto;
+.folder-action-btn:hover {
+  color: var(--text);
 }
-.folder-delete-btn:hover {
+.folder-action-delete:hover {
   color: var(--error);
 }
 
