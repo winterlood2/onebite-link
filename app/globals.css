@@ -30,6 +30,17 @@ body {
   background: var(--accent-hover);
 }
 
+.btn-secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  font-size: 14px;
+  transition: background 0.15s ease;
+}
+.btn-secondary:hover {
+  background: var(--hover-bg);
+}
+
 .nav-item {
   transition: background 0.15s ease;
 }
