@@ -41,6 +41,38 @@ body {
   background: var(--hover-bg);
 }
 
+.btn-danger {
+  background: var(--error);
+  color: white;
+  font-size: 14px;
+  transition: opacity 0.15s ease;
+}
+.btn-danger:hover {
+  opacity: 0.85;
+}
+
+/* Folder item — trash icon swap with count on hover */
+.folder-count {
+  transition: opacity 0.15s ease;
+}
+.folder-item:hover .folder-count {
+  opacity: 0;
+}
+
+.folder-delete-btn {
+  opacity: 0;
+  pointer-events: none;
+  color: var(--text-sub);
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+.folder-item:hover .folder-delete-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+.folder-delete-btn:hover {
+  color: var(--error);
+}
+
 .nav-item {
   transition: background 0.15s ease;
 }
