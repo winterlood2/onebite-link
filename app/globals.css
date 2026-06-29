@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #F7F7F5;
+  --card-bg: #FFFFFF;
+  --text: #37352F;
+  --text-sub: #9B9A97;
+  --placeholder: #C4C4C0;
+  --border: #E3E3E0;
+  --accent: #2EAADC;
+  --accent-hover: #2898C4;
+  --hover-bg: #F1F1EF;
+  --error: #EB5757;
+  --success: #4DAB9A;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+  transition: background 0.15s ease;
+}
+.btn-primary:hover {
+  background: var(--accent-hover);
+}
+
+.nav-item {
+  transition: background 0.15s ease;
+}
+.nav-item:hover {
+  background: var(--hover-bg);
+}
+
+.card-link {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: background 0.15s ease;
+}
+.card-link:hover {
+  background: var(--hover-bg);
+}
+
+.input-field {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 16px;
+  color: var(--text);
+  background: var(--card-bg);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+.input-field::placeholder {
+  color: var(--placeholder);
+}
+.input-field:focus {
+  border-color: var(--accent);
+}
