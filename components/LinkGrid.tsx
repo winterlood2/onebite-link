@@ -5,6 +5,7 @@ interface Link {
   title: string;
   url: string;
   description: string;
+  image?: string | null;
   folder: string;
 }
 

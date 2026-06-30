@@ -7,6 +7,7 @@ import NewFolderModal from "@/components/NewFolderModal";
 import EditFolderModal from "@/components/EditFolderModal";
 import ConfirmModal from "@/components/ConfirmModal";
 import { folders as initialFolders } from "@/lib/data";
+import { FolderProvider } from "@/context/FolderContext";
 
 interface Folder {
   id: string;
@@ -52,7 +53,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           onRequestEdit={setEditTargetId}
           onRequestDelete={setDeleteTargetId}
         />
-        <main className="flex-1 overflow-y-auto bg-[var(--bg)]">{children}</main>
+        <main className="flex-1 overflow-y-auto bg-[var(--bg)]">
+            <FolderProvider folders={folders}>{children}</FolderProvider>
+          </main>
       </div>
 
       {newFolderOpen && (

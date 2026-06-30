@@ -1,8 +1,9 @@
 import AppLayout from "@/components/AppLayout";
 import LinkGrid from "@/components/LinkGrid";
-import { links } from "@/lib/data";
+import { readLinks } from "@/lib/store";
 
-export default function Home() {
+export default async function Home() {
+  const links = await readLinks();
   return (
     <AppLayout>
       <LinkGrid links={links} />
