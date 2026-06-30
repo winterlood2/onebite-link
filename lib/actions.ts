@@ -16,3 +16,9 @@ export async function addLink(data: {
   await writeLinks(links);
   revalidatePath("/");
 }
+
+export async function deleteLink(id: string) {
+  const links = await readLinks();
+  await writeLinks(links.filter((l) => l.id !== id));
+  revalidatePath("/");
+}
