@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import ConfirmModal from "@/components/ConfirmModal";
+import EditLinkModal from "@/components/EditLinkModal";
 import { deleteLink } from "@/lib/actions";
 
 interface Link {
@@ -25,6 +26,7 @@ function getDomain(url: string) {
 export default function LinkCard({ link }: { link: Link }) {
   const domain = getDomain(link.url);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -88,6 +90,28 @@ export default function LinkCard({ link }: { link: Link }) {
         <button
           onClick={(e) => {
             e.preventDefault();
+            setShowEdit(true);
+          }}
+          aria-label={`${link.title} 수정`}
+          className="p-1.5 rounded-md bg-[var(--card-bg)] border border-[var(--border)] text-[var(--text-sub)] hover:text-[var(--accent)] hover:border-[var(--accent)] cursor-pointer transition-colors"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" />
+          </svg>
+        </button>
+        <button
+          onClick={(e) => {
+            e.preventDefault();
             setShowConfirm(true);
           }}
           disabled={isPending}
@@ -110,6 +134,10 @@ export default function LinkCard({ link }: { link: Link }) {
           </svg>
         </button>
       </div>
+
+      {showEdit && (
+        <EditLinkModal link={link} onClose={() => setShowEdit(false)} />
+      )}
 
       {showConfirm && (
         <ConfirmModal

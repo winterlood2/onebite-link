@@ -22,3 +22,14 @@ export async function deleteLink(id: string) {
   await writeLinks(links.filter((l) => l.id !== id));
   revalidatePath("/");
 }
+
+export async function updateLink(
+  id: string,
+  data: { title: string; description: string; folder: string }
+) {
+  const links = await readLinks();
+  await writeLinks(
+    links.map((l) => (l.id === id ? { ...l, ...data } : l))
+  );
+  revalidatePath("/");
+}
