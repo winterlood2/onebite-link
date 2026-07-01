@@ -3,7 +3,6 @@
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
-import { readLinks, writeLinks } from "./store";
 
 export async function addLink(data: {
   title: string;
@@ -26,9 +25,11 @@ export async function addLink(data: {
 }
 
 export async function deleteLink(id: string) {
-  const links = await readLinks();
-  await writeLinks(links.filter((l) => l.id !== id));
-  revalidatePath("/");
+  const supabase = createClient(await cookies());
+  const { error } = await supabase.from("links").delete().eq("id", Number(id));
+
+  if (error) throw error;
+  revalidatePath("/", "layout");
 }
 
 export async function updateLink(
