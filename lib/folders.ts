@@ -36,3 +36,11 @@ export async function renameFolder(id: number, name: string): Promise<void> {
   if (error) throw error;
   revalidatePath("/", "layout");
 }
+
+export async function deleteFolder(id: number): Promise<void> {
+  const supabase = createClient(await cookies());
+  const { error } = await supabase.from("folders").delete().eq("id", id);
+
+  if (error) throw error;
+  revalidatePath("/", "layout");
+}
