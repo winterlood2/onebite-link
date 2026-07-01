@@ -7,7 +7,7 @@ import Sidebar from "@/components/Sidebar";
 import NewFolderModal from "@/components/NewFolderModal";
 import EditFolderModal from "@/components/EditFolderModal";
 import ConfirmModal from "@/components/ConfirmModal";
-import { addFolder, type FolderData } from "@/lib/folders";
+import { addFolder, renameFolder, type FolderData } from "@/lib/folders";
 import { FolderProvider } from "@/context/FolderContext";
 
 interface Folder {
@@ -60,12 +60,11 @@ export default function AppLayout({
     }
   };
 
-  const handleRenameFolder = (name: string) => {
+  const handleRenameFolder = async (name: string) => {
     if (!editTargetId) return;
-    setFolders((prev) =>
-      prev.map((f) => (f.id === editTargetId ? { ...f, name } : f))
-    );
+    await renameFolder(Number(editTargetId), name);
     setEditTargetId(null);
+    router.refresh();
   };
 
   const handleDeleteFolder = () => {

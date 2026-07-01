@@ -28,3 +28,11 @@ export async function addFolder(name: string): Promise<void> {
   if (error) throw error;
   revalidatePath("/", "layout");
 }
+
+export async function renameFolder(id: number, name: string): Promise<void> {
+  const supabase = createClient(await cookies());
+  const { error } = await supabase.from("folders").update({ name }).eq("id", id);
+
+  if (error) throw error;
+  revalidatePath("/", "layout");
+}
