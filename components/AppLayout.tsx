@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import NewFolderModal from "@/components/NewFolderModal";
 import EditFolderModal from "@/components/EditFolderModal";
 import ConfirmModal from "@/components/ConfirmModal";
-import { folders as initialFolders } from "@/lib/data";
+import { addFolder, type FolderData } from "@/lib/folders";
 import { FolderProvider } from "@/context/FolderContext";
 
 interface Folder {
@@ -15,19 +16,48 @@ interface Folder {
   count: number;
 }
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
-  const [folders, setFolders] = useState<Folder[]>(initialFolders);
+function toFolder(data: FolderData): Folder {
+  return { id: String(data.id), name: data.name, count: 0 };
+}
+
+export default function AppLayout({
+  children,
+  initialFolders,
+}: {
+  children: React.ReactNode;
+  initialFolders: FolderData[];
+}) {
+  const router = useRouter();
+  const [prevInitialFolders, setPrevInitialFolders] = useState(initialFolders);
+  const [folders, setFolders] = useState<Folder[]>(() =>
+    initialFolders.map(toFolder)
+  );
   const [newFolderOpen, setNewFolderOpen] = useState(false);
+  const [isAddingFolder, setIsAddingFolder] = useState(false);
+  const isAddingFolderRef = useRef(false);
   const [editTargetId, setEditTargetId] = useState<string | null>(null);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+
+  if (initialFolders !== prevInitialFolders) {
+    setPrevInitialFolders(initialFolders);
+    setFolders(initialFolders.map(toFolder));
+  }
 
   const editTarget = folders.find((f) => f.id === editTargetId);
   const deleteTarget = folders.find((f) => f.id === deleteTargetId);
 
-  const handleAddFolder = (name: string) => {
-    const id = Math.random().toString(36).slice(2, 9);
-    setFolders((prev) => [...prev, { id, name, count: 0 }]);
-    setNewFolderOpen(false);
+  const handleAddFolder = async (name: string) => {
+    if (isAddingFolderRef.current) return;
+    isAddingFolderRef.current = true;
+    setIsAddingFolder(true);
+    try {
+      await addFolder(name);
+      setNewFolderOpen(false);
+      router.refresh();
+    } finally {
+      isAddingFolderRef.current = false;
+      setIsAddingFolder(false);
+    }
   };
 
   const handleRenameFolder = (name: string) => {
@@ -62,6 +92,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <NewFolderModal
           onClose={() => setNewFolderOpen(false)}
           onSave={handleAddFolder}
+          isSaving={isAddingFolder}
         />
       )}
 

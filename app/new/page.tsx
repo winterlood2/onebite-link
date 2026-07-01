@@ -1,9 +1,11 @@
 import AppLayout from "@/components/AppLayout";
 import NewLinkForm from "@/components/NewLinkForm";
+import { getFolders } from "@/lib/folders";
 
-export default function NewPage() {
+export default async function NewPage() {
+  const folders = await getFolders();
   return (
-    <AppLayout>
+    <AppLayout initialFolders={folders}>
       <NewLinkForm />
     </AppLayout>
   );

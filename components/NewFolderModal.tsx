@@ -5,14 +5,15 @@ import { useState } from "react";
 interface Props {
   onClose: () => void;
   onSave: (name: string) => void;
+  isSaving?: boolean;
 }
 
-export default function NewFolderModal({ onClose, onSave }: Props) {
+export default function NewFolderModal({ onClose, onSave, isSaving = false }: Props) {
   const [name, setName] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return;
+    if (!name.trim() || isSaving) return;
     onSave(name.trim());
   };
 
@@ -28,22 +29,24 @@ export default function NewFolderModal({ onClose, onSave }: Props) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="폴더 이름"
-            className="input-field"
+            disabled={isSaving}
+            className="input-field disabled:opacity-50 disabled:cursor-not-allowed"
           />
           <div className="flex justify-end gap-2">
             <button
               type="button"
               onClick={onClose}
-              className="btn-secondary text-sm font-medium px-4 py-2 rounded-md"
+              disabled={isSaving}
+              className="btn-secondary text-sm font-medium px-4 py-2 rounded-md disabled:opacity-40 disabled:cursor-not-allowed"
             >
               취소
             </button>
             <button
               type="submit"
-              disabled={!name.trim()}
+              disabled={!name.trim() || isSaving}
               className="btn-primary px-4 py-2 rounded-md disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              저장
+              {isSaving ? "저장 중..." : "저장"}
             </button>
           </div>
         </form>
