@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { addLink } from "@/lib/actions";
 import { useFolders } from "@/context/FolderContext";
@@ -10,11 +10,14 @@ export default function NewLinkForm() {
   const [folder, setFolder] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const isSubmittingRef = useRef(false);
   const router = useRouter();
   const folders = useFolders();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmittingRef.current) return;
+    isSubmittingRef.current = true;
     setError(null);
 
     startTransition(async () => {
@@ -34,12 +37,14 @@ export default function NewLinkForm() {
           url: og.url || url,
           description: og.description || "",
           image: og.image || null,
-          folder,
+          folderId: folder ? Number(folder) : null,
         });
 
         router.push("/");
       } catch {
         setError("링크를 저장하는 중 오류가 발생했습니다.");
+      } finally {
+        isSubmittingRef.current = false;
       }
     });
   };
